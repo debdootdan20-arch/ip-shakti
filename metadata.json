@@ -1,0 +1,6 @@
+{
+  "name": "IP-SAKTI Sahayak",
+  "description": "Multilingual Ayurvedic Disease Detection and RAG-based Intellectual Property & Regulatory Assistant for Traditional Knowledge, Patenting, and AYUSH Healthcare.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
