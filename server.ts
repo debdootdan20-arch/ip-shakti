@@ -599,7 +599,7 @@ Generate the complete clinical evaluation in JSON.`;
     parts.push({ text: promptText });
 
     const response = await generateContentWithRetry(ai, {
-      model: 'gemini-3.7-flash',
+      model: 'gemini-2.5-flash' ,
       contents: parts,
       config: {
         systemInstruction,
