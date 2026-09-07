@@ -522,10 +522,15 @@ app.post('/api/analyze-symptoms', async (req: Request, res: Response) => {
     }
 
     const ai = getGeminiClient();
-    if (!ai) {
-      const fallback = getFallbackAssessment(symptoms || '', language, !!imageBase64);
-      return res.json(fallback);
-    }
+
+if (!ai) {
+  console.error('Gemini client unavailable. Check GEMINI_API_KEY.');
+
+  return res.status(503).json({
+    error: 'AI diagnosis service is unavailable.',
+    code: 'GEMINI_NOT_CONFIGURED'
+  });
+}
 
     const langNameMap: Record<string, string> = {
       en: 'English',
