@@ -746,11 +746,12 @@ Generate the complete clinical evaluation in JSON.`;
  } catch (error: any) {
   console.error('Gemini diagnosis failed:', error);
 
-  return res.status(500).json({
+    return res.status(500).json({
     error: 'AI diagnosis failed.',
     code: 'GEMINI_DIAGNOSIS_ERROR'
   });
 }
+});
 
 // 3. Dinacharya & Daily Ayurvedic Food & Medicine Routine Generator
 app.post('/api/dinacharya/generate', async (req: Request, res: Response) => {
