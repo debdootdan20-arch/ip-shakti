@@ -402,15 +402,9 @@ async function generateContentWithRetry(
   params: any,
   maxRetries = 1
 ): Promise<any> {
-  const primaryModel = params.model || 'gemini-3.7-flash';
-  // Deduped list of models to try in order
-  const modelsToTry = Array.from(
-    new Set([
-      primaryModel,
-      'gemini-flash-latest',
-      'gemini-3.1-flash-lite',
-    ])
-  );
+  const primaryModel = params.model || 'gemini-2.5-flash';
+
+const modelsToTry = [primaryModel];
 
   let lastError: any = null;
 
