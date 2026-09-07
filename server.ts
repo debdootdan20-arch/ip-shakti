@@ -402,11 +402,13 @@ async function generateContentWithRetry(
   params: any,
   maxRetries = 1
 ): Promise<any> {
- const primaryModel = params.model || 'gemini-2.5-flash';
+ const primaryModel = params.model || 'gemini-3.7-flash';
 
 const modelsToTry = [
   primaryModel,
-  'gemini-2.5-flash-lite',
+  'gemini-3.6-flash',
+  'gemini-3.5-flash-lite',
+  'gemini-3.1-flash-lite',
 ];
 
   let lastError: any = null;
@@ -599,7 +601,7 @@ Generate the complete clinical evaluation in JSON.`;
     parts.push({ text: promptText });
 
     const response = await generateContentWithRetry(ai, {
-      model: 'gemini-2.5-flash' ,
+      model: 'gemini-3.7-flash', 
       contents: parts,
       config: {
         systemInstruction,
