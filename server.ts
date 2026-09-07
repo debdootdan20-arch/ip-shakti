@@ -743,11 +743,14 @@ Generate the complete clinical evaluation in JSON.`;
     }
 
     return res.json(result);
-  } catch (error: any) {
-    console.warn('Diagnosis fallback activated gracefully:', error?.message || error);
-    return res.json(getFallbackAssessment(req.body.symptoms || 'General Condition', req.body.language || 'en', !!req.body.imageBase64));
-  }
-});
+ } catch (error: any) {
+  console.error('Gemini diagnosis failed:', error);
+
+  return res.status(500).json({
+    error: 'AI diagnosis failed.',
+    code: 'GEMINI_DIAGNOSIS_ERROR'
+  });
+}
 
 // 3. Dinacharya & Daily Ayurvedic Food & Medicine Routine Generator
 app.post('/api/dinacharya/generate', async (req: Request, res: Response) => {
