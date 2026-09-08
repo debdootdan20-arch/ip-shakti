@@ -545,10 +545,101 @@ if (!ai) {
       mr: 'Marathi (मराठी)',
     };
 
-    const targetLang = langNameMap[language] || 'English';
+   const targetLang = langNameMap[language] || 'English';
 
-    const systemInstruction = `You are "IP-SAKTI Vaidya Nidan AI", an expert Ayurvedic physician and Senior Dermatologist / Kayachikitsa diagnostician, grounded in classical texts (Charaka Samhita, Sushruta Samhita, Ashtanga Hridaya, Madhava Nidana, Bhavaprakasha Nighantu, and the Ayurvedic Pharmacopoeia of India).
+// IMAGE VALIDATION — reject unrelated images before disease detection
+if (imageBase64) {
+  try {
+    const cleanBase64 = imageBase64.replace(
+      /^data:image\/[a-zA-Z0-9+.-]+;base64,/,
+      ''
+    );
 
+    const mime = imageMimeType ||
+      (imageBase64.startsWith('data:image/png') ? 'image/png' :
+       imageBase64.startsWith('data:image/webp') ? 'image/webp' :
+       'image/jpeg');
+
+    const validationResponse = await generateContentWithRetry(ai, {
+      model: 'gemini-3.5-flash-lite',
+      contents: [
+        {
+          inlineData: {
+            data: cleanBase64,
+            mimeType: mime,
+          },
+        },
+        {
+          text: `Determine whether this uploaded image is appropriate for a medical disease detection system.
+
+The image is VALID only if it clearly shows a relevant human body area or visible clinical condition that can reasonably be assessed visually, such as:
+- skin or skin lesion
+- rash
+- wound
+- swelling
+- joint area
+- tongue
+- eye area
+- nail
+- mouth/oral lesion
+- other clearly visible physical clinical abnormality
+
+The image is INVALID if it is:
+- a logo
+- icon
+- poster
+- screenshot
+- computer graphic
+- drawing
+- meme
+- scenery
+- animal
+- food
+- random object
+- unrelated photograph
+- image where no relevant clinical body area can be identified.
+
+Do NOT diagnose the disease.
+
+Return ONLY JSON:
+{
+  "isValid": true or false,
+  "reason": "short explanation"
+}`
+        }
+      ],
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            isValid: { type: Type.BOOLEAN },
+            reason: { type: Type.STRING },
+          },
+          required: ['isValid', 'reason'],
+        },
+      },
+    });
+
+    const validation = JSON.parse(validationResponse.text || '{}');
+
+    if (validation.isValid !== true) {
+      return res.json({
+        invalidInput: true,
+        error: 'This is an invalid input. Please upload a clear image of the affected body area for disease detection.',
+        reason: validation.reason || 'The uploaded image is not suitable for disease detection.'
+      });
+    }
+  } catch (validationError) {
+    console.error('Image validation failed:', validationError);
+
+    return res.status(500).json({
+      error: 'Image validation could not be completed. Please try again.'
+    });
+  }
+}
+
+const systemInstruction = `You are "IP-SAKTI Vaidya Nidan AI"
 CRITICAL VISUAL & CLINICAL DIAGNOSTIC RULES:
 1. When an image is provided:
    - Perform a meticulous visual examination (Darshana Pariksha) of the lesion morphology, coloration, erythema, scaling, margin definition, vesicle/pustule presence, tongue coating (Sama/Nirama), nail discoloration/ridges, or swelling.
