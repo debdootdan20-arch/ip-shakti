@@ -125,9 +125,21 @@ export const SymptomChecker: React.FC<SymptomCheckerProps> = ({
       }
 
       const data = await response.json();
-      lastDetectedQueryRef.current = queryKey;
-      setResult(data);
-      setDetectStatus('detected');
+
+// Handle invalid image input
+if (data.invalidInput) {
+  setResult(null);
+  setDetectStatus('error');
+  setErrorMsg(
+    data.error ||
+    'This is an invalid input. Please upload a clear image of the affected body area for disease detection.'
+  );
+  return;
+}
+
+lastDetectedQueryRef.current = queryKey;
+setResult(data);
+setDetectStatus('detected');
       setDetectedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
 
       if (onSaveAssessment) {
