@@ -749,10 +749,22 @@ Generate the complete clinical evaluation in JSON.`;
  } catch (error: any) {
   console.error('Gemini diagnosis failed:', error);
 
+  try {
+    const fallbackResult = getFallbackAssessment(
+      symptoms || '',
+      language,
+      !!imageBase64
+    );
+
+    return res.json(fallbackResult);
+  } catch (fallbackError: any) {
+    console.error('Fallback diagnosis also failed:', fallbackError);
+
     return res.status(500).json({
-    error: 'AI diagnosis failed.',
-    code: 'GEMINI_DIAGNOSIS_ERROR'
-  });
+      error: 'AI diagnosis failed. Please try again.',
+      code: 'GEMINI_DIAGNOSIS_ERROR'
+    });
+  }
 }
 });
 
