@@ -809,7 +809,7 @@ setDetectStatus('detected');
                         Detected Anatomical Area / Srotas
                       </span>
                       <span className="text-xs font-bold text-slate-900 dark:text-white">
-                        {result.visualInspection?.detectedOrganOrArea || result.affectedBodySystem || 'Tvak & Rasavaha Srotas'}
+                       {result.visualInspection?.detectedOrganOrArea || result.affectedBodySystem || 'Not available'}
                       </span>
                     </div>
 
@@ -818,7 +818,7 @@ setDetectStatus('detected');
                         Lesion Morphology & Pattern
                       </span>
                       <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300">
-                        {result.visualInspection?.morphology || 'Annular plaques with erythematous scaling borders'}
+                        {result.visualInspection?.morphology || 'Not available'}
                       </span>
                     </div>
 
@@ -827,7 +827,7 @@ setDetectStatus('detected');
                         Coloration (Varna / Vaivarnya)
                       </span>
                       <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
-                        {result.visualInspection?.coloration || 'Erythematous base with elevated scaling perimeter'}
+                        {result.visualInspection?.coloration || 'Not available'}
                       </span>
                     </div>
 
@@ -836,7 +836,7 @@ setDetectStatus('detected');
                         Recommended Clinical Speciality
                       </span>
                       <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
-                        {result.recommendedSpeciality || 'Ayurvedic Dermatology (Tvak Roga Chikitsa)'}
+                       {result.recommendedSpeciality || 'Not available'}
                       </span>
                     </div>
                   </div>
